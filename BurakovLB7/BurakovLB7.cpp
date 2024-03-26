@@ -1,22 +1,20 @@
-﻿#include <iostream>
+#include <iostream>
 #include <map>
 #define MAX 50
+#define MAXLINE 500
 
 template <typename T>
 class Stack {
   public:
+
       void push(const T n) {
           top++;
           arr[top] = n;
       }
 
       T& pop() {
-          if (top >= 0) {
-              top--;
-              return arr[top + 1];
-          }
-          else
-              throw std::out_of_range("Стек пуст");
+          top--;
+          return arr[top + 1];
       }
 
       int size() const {
@@ -28,16 +26,42 @@ class Stack {
     int top = -1;
 };
 
+void OrderRPN(char c) {
+
+}
+
+void input() {
+    char chr[MAXLINE];
+    char c;
+    std::cin.getline(chr, MAXLINE);
+    int i = 0;
+    int sz = std::strlen(chr);
+    while ( i < sz ) {
+        c = chr[i];
+        if (c == '+' || c == '-' || c == '*' || c == '/' || c == '(' || c == ')' || c == '^') {
+            OrderRPN(c);
+        } 
+        else if (static_cast<int>(c) <= 57 && static_cast<int>(c) >= 48) {
+            std::cout << c;
+            if (i < sz - 1) {
+                while (static_cast<int>(chr[i + 1]) <= 57 && static_cast<int>(chr[i + 1]) >= 48) {
+                    std::cout << chr[i + 1];
+                    i++;
+                }
+            }
+            std::cout << ' ';
+        }
+        i++;
+    }
+   
+}
 
 int main()
 {
     std::map<char, int> prioryty = { {')', 0}, {'(', 1}, {'+', 2}, {'-', 2}, {'*', 3}, {'/', 3}, {'^',4}};
 
     Stack<char> a;
-    char c;
-    while (std::cin.get(c) && c!='\n') {
-        if (c != ' ') {
-
-        }
-    }
+    
+    input();
+    
 }
