@@ -3,34 +3,71 @@
 #define MAX 50
 #define MAXLINE 500
 
-template <typename T>
 class Stack {
   public:
 
-      void push(const T n) {
-          top++;
-          arr[top] = n;
+      void push(const char n) {
+          last++;
+          arr[last] = n;
       }
 
-      T& pop() {
-          top--;
-          return arr[top + 1];
+      void pop() {
+          last--;
       }
 
-      int size() const {
-          return top + 1;
+      char& top() {
+          return arr[last];
+      }
+
+      bool empty() const {
+          return (last == -1);
       }
 
   private:
-    T arr[MAX];
-    int top = -1;
+    char arr[MAX];
+    int last = -1;
 };
 
-void OrderRPN(char c) {
+// (4+4)*5^(6+5) 
+// 4 4 + 5 6 5 + ^ *
+// * 5 ^ (6+ 5)
 
+void OrderRPN(char c, Stack& stack) {
+    std::map<char, int> prioryty = { {'+', 1}, {'-', 1}, {'*', 2}, {'/', 2}, {'^',3} };
+
+    if (stack.empty()) {
+        stack.push(c);
+    }
+    else {
+        if (c == ')') {
+            while (stack.top() != '(') {
+                std::cout << stack.top() << ' ';
+                stack.pop();
+            }
+            stack.pop();
+        }
+        else if (c == '(') {
+            stack.push(c);
+        }
+        else {
+            while (!stack.empty() && prioryty[stack.top()] >= prioryty[c]) {
+                std::cout << stack.top() << ' ';
+                stack.pop();
+            }
+            stack.push(c);
+        }
+    }
 }
 
-void input() {
+void DevastStack(Stack& stack) {
+    while (!stack.empty()) {
+        std::cout << stack.top() << ' ';
+        stack.pop();
+    }
+}
+
+void start(Stack& stack) {
+    std::cout << "Введите выражение:\n";
     char chr[MAXLINE];
     char c;
     std::cin.getline(chr, MAXLINE);
@@ -39,7 +76,7 @@ void input() {
     while ( i < sz ) {
         c = chr[i];
         if (c == '+' || c == '-' || c == '*' || c == '/' || c == '(' || c == ')' || c == '^') {
-            OrderRPN(c);
+            OrderRPN(c, stack);
         } 
         else if (static_cast<int>(c) <= 57 && static_cast<int>(c) >= 48) {
             std::cout << c;
@@ -53,15 +90,12 @@ void input() {
         }
         i++;
     }
-   
+    DevastStack(stack);
+    std::cout << "\n";
 }
 
-int main()
-{
-    std::map<char, int> prioryty = { {')', 0}, {'(', 1}, {'+', 2}, {'-', 2}, {'*', 3}, {'/', 3}, {'^',4}};
-
-    Stack<char> a;
-    
-    input();
-    
+int main(){
+    setlocale(LC_ALL, "RU");
+    Stack stack;
+    start(stack);   
 }
