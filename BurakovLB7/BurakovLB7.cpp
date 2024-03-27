@@ -28,10 +28,6 @@ class Stack {
     int last = -1;
 };
 
-// (4+4)*5^(6+5) 
-// 4 4 + 5 6 5 + ^ *
-// * 5 ^ (6+ 5)
-
 void OrderRPN(char c, Stack& stack) {
     std::map<char, int> prioryty = { {'+', 1}, {'-', 1}, {'*', 2}, {'/', 2}, {'^',3} };
 
